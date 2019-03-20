@@ -1,20 +1,28 @@
 var express = require("express");
-var app = express();
 var fs = require('fs');
+var app = express();
+
+/**
+ *
+ * @returns {number}
+ */
+String.prototype.hashCode = function() {
+    var hash = 0, i, chr;
+    if (this.length === 0) return hash;
+    for (i = 0; i < this.length; i++) {
+        chr   = this.charCodeAt(i);
+        hash  = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+};
+
 
 app.listen(3030, () => {
     console.log("Server running on port 3030");
 });
 
 app.get("/headline/:reqDevice/:reqFontFamily/:reqFontSize/:reqFontColor/:reqLineHeight/:reqBackground/:reqPadding/:reqText", (req, res, next) => {
-    var text2png = require('text2png');
-    res.writeHead(200, {"Content-Type": "image/png"});
-    res.write(text2png(req.params.reqText, {
-        color: "#"+req.params.reqFontColor,
-        padding: parseInt(req.params.reqPadding),
-        backgroundColor: "#"+req.params.reqBackground
-    }));
-    res.stop();
 
     /*res.json([{ 'Device': req.params.reqDevice,
                 'font-family': req.params.reqFontFamily,
@@ -24,14 +32,25 @@ app.get("/headline/:reqDevice/:reqFontFamily/:reqFontSize/:reqFontColor/:reqLine
                 'background': req.params.reqBackground,
                 'padding': req.params.reqPadding,
                 'text': req.params.reqText
-    }]);
-    console.log(req.params.reqDevice);
+    }]);*/
+    let rawID = req.params.reqDevice + req.params.reqFontFamily + req.params.reqFontSize + req.params.reqFontColor + req.params.reqLineHeight + req.params.reqBackground + req.params.reqPadding + req.params.reqText;
 
 
-    var text2png = require('text2png');
-    fs.writeFileSync('out.png', text2png(req.params.reqText, {
-        color: req.params.reqFontColor,
-        padding: parseInt(req.params.reqPadding)
-    }));*/
+
+    fs.exists('cache/' + rawID.toString().hashCode() + '.png', function(exists) {
+        if (exists) {
+            fs.readFile('cache/' + rawID.toString().hashCode() + '.png', function (err,data) {
+                if (err) {
+                    return console.log(err);
+                }
+                res.writeHead(200, {"Content-Type": "image/png"});
+                res.write(data);
+            });
+
+        } else {
+            console.log('NOT OK');
+        }
+    });
 
 });
+
