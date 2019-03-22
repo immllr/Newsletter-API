@@ -1,0 +1,29 @@
+{
+  "name": "newsletter-api",
+  "version": "1.0.0",
+  "description": "a simple api to generate images for newsletter",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/immllr/Newsletter-API.git"
+  },
+  "author": "Daniel Müller",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/immllr/Newsletter-API/issues"
+  },
+  "homepage": "https://github.com/immllr/Newsletter-API#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "html-to-image": "^0.1.0",
+    "phantom": "^6.0.3",
+    "text2png": "^2.1.0",
+    "webshot": "^0.18.0"
+  },
+  "devDependencies": {
+    "html-png-stream": "^1.1.0"
+  }
+}
